@@ -3,6 +3,7 @@
 Aggregate tools from multiple MCP servers into a single, unified namespace.
 
 [![npm version](https://img.shields.io/npm/v/mcp-tool-router.svg)](https://www.npmjs.com/package/mcp-tool-router)
+[![npm downloads](https://img.shields.io/npm/dt/mcp-tool-router.svg)](https://www.npmjs.com/package/mcp-tool-router)
 [![license](https://img.shields.io/npm/l/mcp-tool-router.svg)](https://github.com/SiluPanda/mcp-tool-router/blob/master/LICENSE)
 [![node](https://img.shields.io/node/v/mcp-tool-router.svg)](https://nodejs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue.svg)](https://www.typescriptlang.org/)
