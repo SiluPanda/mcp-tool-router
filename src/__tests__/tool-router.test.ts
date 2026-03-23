@@ -445,6 +445,39 @@ describe('ToolRouter', () => {
       const metrics = router.metrics;
       expect(metrics.uptimeMs).toBeGreaterThanOrEqual(0);
     });
+
+    it('metrics include totalResources and totalPrompts from upstreams', () => {
+      router.addServer('github', {
+        tools: [{ name: 'search' }],
+        handler: makeHandler(),
+      });
+
+      router.addServer('jira', {
+        tools: [{ name: 'create_ticket' }],
+        handler: makeHandler(),
+      });
+
+      // Inject resources and prompts via the internal registry
+      const registry = (router as any).serverRegistry;
+      registry.updateResources('github', [
+        { uri: 'repo://org/repo', name: 'repo' },
+        { uri: 'repo://org/repo2', name: 'repo2' },
+      ]);
+      registry.updatePrompts('github', [
+        { name: 'summarize', description: 'Summarize an issue' },
+      ]);
+      registry.updateResources('jira', [
+        { uri: 'jira://project/PROJ', name: 'project' },
+      ]);
+      registry.updatePrompts('jira', [
+        { name: 'triage', description: 'Triage a ticket' },
+        { name: 'estimate', description: 'Estimate effort' },
+      ]);
+
+      const metrics = router.metrics;
+      expect(metrics.totalResources).toBe(3);
+      expect(metrics.totalPrompts).toBe(3);
+    });
   });
 
   describe('events', () => {
