@@ -244,8 +244,8 @@ export class ToolRouter extends EventEmitter {
       totalCalls: Object.values(upstreams).reduce((sum, u) => sum + u.callCount, 0),
       totalErrors: Object.values(upstreams).reduce((sum, u) => sum + u.errorCount, 0),
       totalTools: routes.length,
-      totalResources: 0,
-      totalPrompts: 0,
+      totalResources: Object.values(upstreams).reduce((sum, u) => sum + (u.resourceCount ?? 0), 0),
+      totalPrompts: Object.values(upstreams).reduce((sum, u) => sum + (u.promptCount ?? 0), 0),
       upstreams,
       uptimeMs: Date.now() - this.startTime,
     };

@@ -225,7 +225,7 @@ export class RequestRouter {
     const executeCall = async (): Promise<ToolCallResponse> => {
       const startTime = Date.now();
       try {
-        const response = await server.handler(entry.originalName, request.arguments);
+        const response = await server.handler(entry.originalName, context.arguments);
         const durationMs = Date.now() - startTime;
         this.registry.recordCall(entry.upstreamName, durationMs, !!response.isError);
         return response;

@@ -385,6 +385,31 @@ describe('Integration Tests', () => {
       expect(dropResult.isError).toBe(true);
       expect((dropResult.content[0] as { type: 'text'; text: string }).text).toContain('Access denied');
     });
+
+    it('middleware can replace context.arguments entirely', async () => {
+      const router = new ToolRouter();
+
+      const receivedArgs: Record<string, unknown>[] = [];
+      router.addServer('github', {
+        tools: [{ name: 'search' }],
+        handler: async (name, args) => {
+          receivedArgs.push(args);
+          return { content: [{ type: 'text', text: `query=${args.query}` }] };
+        },
+      });
+
+      // Middleware that replaces the entire arguments object
+      router.use(async (ctx, next) => {
+        ctx.arguments = { query: 'replaced-value', extra: true };
+        return next();
+      });
+
+      const result = await router.callTool('github/search', { query: 'original-value' });
+
+      expect(receivedArgs).toHaveLength(1);
+      expect(receivedArgs[0]).toEqual({ query: 'replaced-value', extra: true });
+      expect((result.content[0] as { type: 'text'; text: string }).text).toBe('query=replaced-value');
+    });
   });
 
   describe('metrics tracking across servers', () => {
